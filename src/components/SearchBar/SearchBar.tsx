@@ -6,21 +6,6 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); 
-
-    const formData = new FormData(event.currentTarget);
-    const query = (formData.get("query") as string)?.trim();
-
-    if (!query) {
-      toast.error("Please enter your search query.");
-      return;
-    }
-
-    onSubmit(query); 
-    event.currentTarget.reset(); 
-  };
-
   return (
     <header className={css.header}>
       <div className={css.container}>
@@ -32,7 +17,18 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
         >
           Powered by TMDB
         </a>
-        <form className={css.form} onSubmit={handleSubmit}>
+        <form
+          className={css.form}
+        
+          action={(formData: FormData) => {
+            const query = (formData.get("query") as string)?.trim();
+            if (!query) {
+              toast.error("Please enter your search query.");
+              return;
+            }
+            onSubmit(query);
+          }}
+        >
           <input
             className={css.input}
             type="text"
